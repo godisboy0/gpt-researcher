@@ -30,5 +30,5 @@ def calculate_price(topic):
 if __name__ == "__main__":
     # topic = "How to evaluate the novel: The Lord of the Rings series?"
     topic = "How to evaluate Alfred Hictchcock and his movies?"
-    search(topic)
+    # search(topic)
     print(calculate_price(topic))

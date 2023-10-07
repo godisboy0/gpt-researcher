@@ -30,6 +30,8 @@ class DefaultLLMUtil(LLMUtil):
             openai.proxy = WebProxy().get_first_available_proxy_str()
         if self.config.get('price'):
             self.price = [TokenPrice.deserialize(TokenPrice, p) for p in self.config['price']]
+        else:
+            self.price = []
 
     def get_smart_result(self, messages, temperature=0.2, max_tokens=None, **kwargs) -> str:
         model = self.__get_model_for_smart(messages)

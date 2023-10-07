@@ -2,6 +2,13 @@ import json
 import os
 from utils.singleton import Singleton
 
+def merge_dict(dict1, dict2):
+    for key in dict2:
+        if key in dict1 and isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+            merge_dict(dict1[key], dict2[key])
+        else:
+            dict1[key] = dict2[key]
+    return dict1
 
 class Config(metaclass=Singleton):
 
@@ -14,8 +21,9 @@ class Config(metaclass=Singleton):
             self.config = self.__load_config(os.path.join(os.path.dirname(
                 os.path.dirname(__file__)), 'config', 'config.default.json'))
         if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'config.private.json')):
-            self.config.update(self.__load_config(os.path.join(os.path.dirname(
-                os.path.dirname(__file__)), 'config', 'config.private.json')))
+            config2 = self.__load_config(os.path.join(os.path.dirname(
+                os.path.dirname(__file__)), 'config', 'config.private.json'))
+            self.config = merge_dict(self.config, config2)
         self.check_config()
 
     def get_config(self, key) -> dict:
