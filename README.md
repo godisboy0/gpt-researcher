@@ -27,6 +27,10 @@ cp config.private.template.json config.private.json
 
 ## Architecture
 
+![1696681027135](image/README/1696681027135.png)
+
+![]()
+
 ## Example
 
 here is an exaample for topic: How to evaluate Alfred Hictchcock and his movies?
@@ -169,4 +173,3 @@ just some of those
     }
 }
 ```
-
