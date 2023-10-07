@@ -1,0 +1,12 @@
+{
+    "proxy": {
+        "socks5": {
+            "host": "127.0.0.1:1080"
+        }
+    },
+    "llms": {
+        "openai": {
+            "api_key": "sk-xxxxxx"
+        }
+    }
+}

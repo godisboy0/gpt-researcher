@@ -1,0 +1,87 @@
+{
+    "proxy": {
+        "description": "proxy settings, used by Proxy class",
+        "http": {
+            "host": "xxxxxx",
+            "user": "xxxxxx",
+            "password": "xxxxxx"
+        },
+        "https": {
+            "host": "xxxxxx",
+            "user": "xxxxxx",
+            "password": "xxxxxx"
+        },
+        "socks5": {
+            "host": "xxxxxx",
+            "user": "xxxxxx",
+            "password": "xxxxxx"
+        }
+    },
+    "crawlers": {
+        "global": {
+            "module_name": [
+                "crawlers.crawler",
+                "crawlers.zhihu"
+            ],
+            "disabled": []
+        },
+        "selenium": {
+            "use_proxy": true,
+            "pool": {
+                "size": 8,
+                "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
+                "page_load_timeout": 10
+            }
+        }
+    },
+    "llms": {
+        "provider": "openai",
+        "openai": {
+            "use_proxy": false,
+            "api_key": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "api_base": "https://api.openai.com/v1",
+            "price": [
+                {
+                    "model": "gpt-4-0613",
+                    "token_type": "Prompt",
+                    "price": 0.03
+                },
+                {
+                    "model": "gpt-4-0613",
+                    "token_type": "Completion",
+                    "price": 0.06
+                },
+                {
+                    "model": "gpt-4-32k",
+                    "token_type": "Prompt",
+                    "price": 0.06
+                },
+                {
+                    "model": "gpt-4-32k",
+                    "token_type": "Completion",
+                    "price": 0.12
+                },
+                {
+                    "model": "gpt-3.5-turbo-0613",
+                    "token_type": "Prompt",
+                    "price": 0.0015
+                },
+                {
+                    "model": "gpt-3.5-turbo-0613",
+                    "token_type": "Completion",
+                    "price": 0.002
+                },
+                {
+                    "model": "gpt-3.5-turbo-16k-0613",
+                    "token_type": "Prompt",
+                    "price": 0.003
+                },
+                {
+                    "model": "gpt-3.5-turbo-16k-0613",
+                    "token_type": "Completion",
+                    "price": 0.004
+                }
+            ]
+        }
+    }
+}

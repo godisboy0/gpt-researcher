@@ -1,0 +1,13 @@
+#Ignore env containing secrets
+.env
+#Ignore Virtual Env
+env/
+#Ignore generated outputs
+outputs
+output
+output/**
+temp
+temp/**
+#Ignore pycache
+**/__pycache__/
+config/config.private.json
