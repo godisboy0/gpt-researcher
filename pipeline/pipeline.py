@@ -5,26 +5,29 @@ from crawlers.crawler_manager import CrawlerManager
 from llms.report_agent import ReportAgent, SummaryGenerator
 from llms.report_outline_generator import ReportOutlineGenerator
 from llms.self_reflection import SelfReflecter
-from components import CrawledPage, Summary, SubTopic, SearchResult, RolePrompt
+from components import CrawledPage, Summary, SubTopic, RolePrompt, LLMTokenBill
+from llms.base_llm_util import LLMUtil
 import logging
 import os
 import time
 from markdown2 import markdown_path
 from weasyprint import HTML, CSS
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Tuple
 
 logger = logging.getLogger(__name__)
 
 def generate_task_id(input_str: str) -> str:
-    return ''.join([x if x.isalnum() else '_' for x in input_str])
+    return ''.join([x if x.isalnum() else '_' for x in input_str]).strip('_')
 
 
 class ResearchPipeline:
 
-    def __init__(self, role_prompt_generator: RolePromptGenerator,  question_expander: QuestionExpander,
+    def __init__(self,llm_util: LLMUtil, role_prompt_generator: RolePromptGenerator,  question_expander: QuestionExpander,
                  search_engine: SearchEngine, crawler_manager: CrawlerManager, report_agent: ReportAgent,
                  outline_generator: ReportOutlineGenerator, self_reflecter: SelfReflecter,
                  summary_generator: SummaryGenerator):
+        self.llm_util = llm_util
         self.role_prompt_generator = role_prompt_generator
         self.question_expander = question_expander
         self.search_engine = search_engine
@@ -34,7 +37,7 @@ class ResearchPipeline:
         self.outline_generator = outline_generator
         self.self_reflecter = self_reflecter
 
-    def do_research(self, topic: str) -> str:
+    def do_research(self, topic: str) -> Tuple[str, str]:
         start_time = time.strftime(
             "%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         task_id = generate_task_id(topic)
@@ -81,6 +84,11 @@ class ResearchPipeline:
         logger.info(f'task {task_id} done, start at {start_time}, end at {end_time}')
         
         self.persist_report(task_id, final_report.report)
+        out_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "output", task_id)
+        return os.path.join(out_dir, "report.pdf"), os.path.join(out_dir, "report.md")
+
+    def get_bill(self, topic: str) -> LLMTokenBill:
+        return self.llm_util.get_bill(generate_task_id(topic))
 
     def summary_for_sub_topic(self, task_id: str, agent_prompt: RolePrompt, sub_topic: SubTopic, query: str, need_relavance_page_num_for_each_query: int) -> Summary:
         """

@@ -23,6 +23,7 @@ def create_pipeline():
     self_reflecter = DefaultSelfReflecter(prompt_provider, llm_util)
 
     return ResearchPipeline(
+        llm_util=llm_util,
         role_prompt_generator=role_prompt_generator,
         question_expander=question_expander,
         search_engine=search_engine,

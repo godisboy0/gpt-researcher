@@ -52,6 +52,8 @@ class DuckDuckGoEngine(SearchEngine):
                 return
             num_returned = 0
             for result in results:
+                if result.get('href').endswith('.pdf'):
+                    continue
                 if num_returned < start_num:
                     num_returned += 1
                     continue

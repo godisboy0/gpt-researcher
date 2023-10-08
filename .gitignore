@@ -11,3 +11,4 @@ temp/**
 #Ignore pycache
 **/__pycache__/
 config/config.private.json
+**/test**

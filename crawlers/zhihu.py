@@ -65,7 +65,7 @@ class ZhihuCrawler(SeleniumCrawler):
             return None
 
     def __cookie_fresh(self, cookie: dict) -> bool:
-        return cookie and cookie.get('write_time') and cookie.get('write_time') > time.time() - 24 * 60 * 60
+        return cookie and cookie.get('write_time') and cookie.get('write_time') > time.time() - 4 * 60 * 60
 
     def __get_or_create_cookie(self):
         with self.lock:
@@ -79,11 +79,13 @@ class ZhihuCrawler(SeleniumCrawler):
                     break
                 time.sleep(1)
             cookie = driver.get_cookies()
+            self.loaded_cookie = {
+                "cookie": cookie, "write_time": time.time()
+            }
             driver.quit()
             with open(self.cookie_file, "w") as f:
-                json.dump({"cookie": cookie, "write_time": time.time()},
-                          f, indent=4, ensure_ascii=False)
-            self.loaded_cookie = cookie
+                json.dump(self.loaded_cookie, f, indent=4, ensure_ascii=False)
+
             return cookie
 
     def crawl(self, url) -> CrawledPage:
@@ -93,7 +95,9 @@ class ZhihuCrawler(SeleniumCrawler):
             driver.get("https://www.zhihu.com")
             for c in cookie:
                 if c['domain'] == ".zhihu.com":
-                    driver.add_cookie({"name": c['name'], "value": c['value'], "domain": c['domain']})
+                    driver.add_cookie(
+                        {"name": c['name'], "value": c['value'], "domain": c['domain']})
+            driver.get(url)
             WebDriverWait(driver, 20).until(
                 self._get_page_waiting_condition()
             )
@@ -113,7 +117,7 @@ class ZhihuCrawler(SeleniumCrawler):
             chunks = (phrase.strip()
                       for line in lines for phrase in line.split("  "))
             text = "\n".join(chunk for chunk in chunks if chunk)
-            if text.find("系统监测到您的网络环境存在异常，为保证您的正常访问，请点击下方验证按钮进行验证。在您验证完成前，该提示将多次出现") != -1:
+            if text.strip() == "" or text.find("系统监测到您的网络环境存在异常，为保证您的正常访问，请点击下方验证按钮进行验证。在您验证完成前，该提示将多次出现") != -1:
                 logger.warning("zhihu crawler blocked by zhihu")
                 raise Exception("zhihu crawler blocked by zhihu")
             return CrawledPage(url, driver.title, text)

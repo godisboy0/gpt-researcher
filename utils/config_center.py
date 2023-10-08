@@ -26,6 +26,18 @@ class Config(metaclass=Singleton):
             self.config = merge_dict(self.config, config2)
         self.check_config()
 
+    def set_global_config(self, key: str, value):
+        """
+        set global config
+        """
+        self.config['global'][key] = value
+    
+    def get_global_config(self, key: str):
+        """
+        get global config
+        """
+        return self.config['global'].get(key)
+
     def get_config(self, key) -> dict:
         """
         return a dict of giving key, if not found, return empty dict
@@ -38,6 +50,10 @@ class Config(metaclass=Singleton):
 
     def check_config(self):
         # TODO: check config integrity
+        if 'global' in self.config:
+            raise Exception("global config should not be set in config file")
+        if 'global' not in self.config:
+            self.config['global'] = {}
         pass
 
 

@@ -28,7 +28,8 @@ class WebDriverPool(metaclass=Singleton):
     def __build_options(self, with_proxy=False):
         options = ChromeOptions()
         options.add_argument(f"user-agent={self.user_agent}")
-        options.add_argument('--headless')
+        if not Config().get_global_config("disable_headless"):
+            options.add_argument('--headless')
         options.add_argument("--enable-javascript")
         if platform == "linux" or platform == "linux2":
             options.add_argument("--disable-dev-shm-usage")

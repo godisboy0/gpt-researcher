@@ -43,7 +43,10 @@ class SeleniumCrawler(Crawler):
         self.use_proxy = self.config.get('use_proxy', False)
         self.driver_pool = WebDriverPool()
     
-    def crawl(self, url) -> CrawledPage:
+    def crawl(self, url: str) -> CrawledPage:
+        if url.endswith(".pdf"):
+            logger.info(f"skip {url} because it is a pdf file")
+            return None
         driver = self.driver_pool.get_driver(self.use_proxy)
         try:
             logger.info(f"crawling {url} using selenium")
