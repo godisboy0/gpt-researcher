@@ -124,9 +124,9 @@ class DefaultLLMUtil(LLMUtil):
             stream=True,
             temperature=temperature
         )
-
         for chunk in response:
-            yield f"""{chunk["choices"][0].message["delta"]}"""
+            if chunk["choices"][0].delta.get("content"):
+                yield f"""{chunk["choices"][0].delta.content}"""
         self.__record_token_use(kwargs.get("task_id"), model, response)
 
     def __record_token_use(self, task_id: str, model: str, response: dict):
