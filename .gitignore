@@ -11,4 +11,7 @@ temp/**
 #Ignore pycache
 **/__pycache__/
 config/config.private.json
-**/test**
+# Allow our test directory but ignore test outputs
+!tests/
+!tests/**
+**/test_output**
